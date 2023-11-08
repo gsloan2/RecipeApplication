@@ -1,0 +1,12 @@
+﻿<Window x:Class="RecipesApp.Dialogue.RecipeDetails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Recipe Details" Height="450" Width="400">
+    <StackPanel Margin="10">
+        <TextBlock x:Name="RecipeNameTextBlock" Text="Recipe Name" FontWeight="Bold" FontSize="18" Margin="0,0,0,10"/>
+        <TextBlock x:Name="IngredientsTextBlock" Text="Ingredients" FontWeight="Bold" Margin="0,0,0,10"/>
+        <ListBox x:Name="IngredientsListBox" />
+        <TextBlock x:Name="InstructionsTextBlock" Text="Instructions" FontWeight="Bold" Margin="10,10,0,0"/>
+        <TextBox x:Name="InstructionsTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="200" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+    </StackPanel>
+</Window>

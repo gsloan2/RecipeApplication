@@ -21,7 +21,7 @@
 
             <ListBox x:Name="CategoryList" Grid.Column="0" Width="200" SelectionMode="Single" SelectionChanged="CategoryList_SelectionChanged" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"></ListBox>
 
-            <ListBox x:Name="RecipeList" Grid.Column="1" Margin="10" DisplayMemberPath="Title"></ListBox>
+            <ListBox x:Name="RecipeList" Grid.Column="1" Margin="10" MouseDoubleClick="RecipeList_MouseDoubleClick" DisplayMemberPath="Title"></ListBox>
         </Grid>
     </DockPanel>
 </Window>

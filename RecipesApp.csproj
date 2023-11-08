@@ -61,6 +61,9 @@
     <Compile Include="Dialogue\EditCategoryDialogue.xaml.cs">
       <DependentUpon>EditCategoryDialogue.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogue\RecipeDetails.xaml.cs">
+      <DependentUpon>RecipeDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecipeBook\Category.cs" />
     <Compile Include="RecipeBook\Recipe.cs" />
     <Page Include="Dialogue\AddCategoryDialogue.xaml">
@@ -68,6 +71,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogue\EditCategoryDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogue\RecipeDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

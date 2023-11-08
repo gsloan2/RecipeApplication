@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Input;
 
 namespace RecipesApp
 {
@@ -15,12 +16,41 @@ namespace RecipesApp
         public MainWindow()
         {
             InitializeComponent();
+            
             Categories = new ObservableCollection<Category>
             {
                 new Category { Name = "Desserts", Recipes = new List<Recipe>
                     {
-                        new Recipe { Title = "Chocolate Cake", Category = "Desserts", Ingredients = new List<string>(), Steps = new List<string>() }
-                        // Add more recipes
+                        new Recipe
+                        {
+                            Title = "Chocolate Cake",
+                            Category = "Desserts",
+                            Ingredients = new List<string>
+                            {
+                                "1-3/4 cups all-purpose flour",
+                                "2 cups sugar",
+                                "3/4 cup cocoa powder",
+                                "1-1/2 teaspoons baking powder",
+                                "1-1/2 teaspoons baking soda",
+                                "1 teaspoon salt",
+                                "2 eggs",
+                                "1 cup whole milk",
+                                "1/2 cup vegetable oil",
+                                "2 teaspoons vanilla extract",
+                                "1 cup boiling water"
+                            },
+                            Steps = new List<string>
+                            {
+                                "Preheat oven to 350 degrees F (175 degrees C).",
+                                "Grease and flour two nine-inch round pans.",
+                                "In a large bowl, stir together the sugar, flour, cocoa, baking powder, baking soda, and salt.",
+                                "Add the eggs, milk, oil, and vanilla, and mix for 2 minutes on medium speed of mixer.",
+                                "Stir in the boiling water last. Batter will be thin. Pour evenly into the prepared pans.",
+                                "Bake 30 to 35 minutes in the preheated oven, until the cake tests done with a toothpick.",
+                                "Cool in the pans for 10 minutes, then remove to a wire rack to cool completely."
+                            }
+                        }
+
                     }
                 },
                 // Add more categories
@@ -36,6 +66,17 @@ namespace RecipesApp
             SelectedCategory = CategoryList.SelectedItem as Category;
             RecipeList.ItemsSource = SelectedCategory?.Recipes;
         }
+
+        private void RecipeList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (RecipeList.SelectedItem is Recipe selectedRecipe)
+            {
+                // Open the detail window
+                RecipeDetails detailWindow = new RecipeDetails(selectedRecipe);
+                detailWindow.ShowDialog(); 
+            }
+        }
+
 
 
         private void AddCategoryButton_Click(object sender, RoutedEventArgs e)
