@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RecipesApp
 {
-
     public class Category : INotifyPropertyChanged
     {
         private string _name;
+        private ObservableCollection<Recipe> _recipes;
 
         public string Name
         {
@@ -25,13 +22,23 @@ namespace RecipesApp
             }
         }
 
-        public List<Recipe> Recipes { get; set; }
+        public ObservableCollection<Recipe> Recipes
+        {
+            get { return _recipes; }
+            set
+            {
+                if (_recipes != value)
+                {
+                    _recipes = value;
+                    OnPropertyChanged(nameof(Recipes));
+                }
+            }
+        }
 
         public Category()
         {
-            Recipes = new List<Recipe>();
+            Recipes = new ObservableCollection<Recipe>();
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -40,5 +47,4 @@ namespace RecipesApp
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-
 }

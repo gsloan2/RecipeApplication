@@ -1,8 +1,10 @@
 ﻿using RecipesApp;
 using RecipesApp.Dialogue;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -19,7 +21,7 @@ namespace RecipesApp
             
             Categories = new ObservableCollection<Category>
             {
-                new Category { Name = "Desserts", Recipes = new List<Recipe>
+                new Category { Name = "Desserts", Recipes = new ObservableCollection<Recipe>
                     {
                         new Recipe
                         {
@@ -120,7 +122,31 @@ namespace RecipesApp
 
         private void AddRecipeButton_Click(object sender, RoutedEventArgs e)
         {
-            // Implement logic to add a new recipe
+            AddRecipeDialogue dialog = new AddRecipeDialogue(Categories);
+
+            if(dialog.ShowDialog() == true)
+            {
+                string RecipeName = dialog.RecipeNameTextBox.Text;
+                string categoryName = dialog.CategoryComboBox.Text;
+                List<string> ingredients = dialog.ListItems
+                                         .Where(item => !string.IsNullOrWhiteSpace(item.Text))
+                                         .Select(item => item.Text)
+                                         .ToList();
+                List<string> instructions = dialog.InstructionsTextBox.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+
+                Recipe recipe = new Recipe
+                {
+                    Title = RecipeName,
+                    Category = categoryName,
+                    Ingredients = ingredients,
+                    Steps = instructions
+                };
+
+                Category category = Categories.FirstOrDefault(c => c.Name.Equals(categoryName, System.StringComparison.OrdinalIgnoreCase));
+
+                //add recipe to the category if category exists
+                category?.Recipes.Add(recipe);
+            }
         }
 
         private void EditRecipeButton_Click(object sender, RoutedEventArgs e)
