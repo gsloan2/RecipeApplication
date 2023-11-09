@@ -3,10 +3,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Recipe Details" Height="450" Width="400">
     <StackPanel Margin="10">
-        <TextBlock x:Name="RecipeNameTextBlock" Text="Recipe Name" FontWeight="Bold" FontSize="18" Margin="0,0,0,10"/>
-        <TextBlock x:Name="IngredientsTextBlock" Text="Ingredients" FontWeight="Bold" Margin="0,0,0,10"/>
-        <ListBox x:Name="IngredientsListBox" />
-        <TextBlock x:Name="InstructionsTextBlock" Text="Instructions" FontWeight="Bold" Margin="10,10,0,0"/>
-        <TextBox x:Name="InstructionsTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="200" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
-    </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,10">
+            <TextBox x:Name="RecipeNameTextBox" Text="Recipe Name" FontWeight="Bold" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Center"/>
+            <ComboBox x:Name="CategoryComboBox" Width="200" Margin="0" VerticalAlignment="Center" DisplayMemberPath="Name" SelectedValuePath="Name">
+                <!-- ComboBox items will be added here -->
+            </ComboBox>
+        </StackPanel>
+
+
+        <TextBlock x:Name="IngredientsTextBlock" Text="Ingredients" FontWeight="Bold" Margin="0,0,0,5" />
+        <ItemsControl x:Name="IngredientsItemsControl" ItemsSource="{Binding ListItems}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                     TextChanged="TextBox_TextChanged"
+                     PreviewTextInput="TextBox_PreviewTextInput"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock x:Name="InstructionsTextBlock" Text="Instructions" FontWeight="Bold" Margin="0,10 ,0,5"/>
+        <TextBox x:Name="InstructionsTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="200" VerticalScrollBarVisibility="Auto"/>
+
+
+         <Button Content="Save" Width="100" Margin="5,5" Click="SaveButton_Click"/>
+        </StackPanel>
 </Window>

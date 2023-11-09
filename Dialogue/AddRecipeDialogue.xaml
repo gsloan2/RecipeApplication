@@ -12,10 +12,11 @@
 
 
         <TextBlock x:Name="IngredientsTextBlock" Text="Ingredients" FontWeight="Bold" Margin="0,0,0,5" />
-        <ItemsControl ItemsSource="{Binding ListItems}">
+        <ItemsControl x:Name="IngredientsItemsControl" ItemsSource="{Binding ListItems}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                     TextChanged="TextBox_TextChanged"
                      PreviewTextInput="TextBox_PreviewTextInput"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
