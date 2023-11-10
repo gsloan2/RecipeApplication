@@ -10,7 +10,7 @@ namespace RecipesApp
         private string _title;
         private int _categoryId; // This is the foreign key reference to the Category table
         private string _ingredients;
-        private string _steps;
+        private string _instructions;
 
         public int Id
         {
@@ -64,15 +64,15 @@ namespace RecipesApp
             }
         }
 
-        public string Steps
+        public string Instructions
         {
-            get { return _steps; }
+            get { return _instructions; }
             set
             {
-                if (_steps != value)
+                if (_instructions != value)
                 {
-                    _steps = value;
-                    OnPropertyChanged(nameof(Steps));
+                    _instructions = value;
+                    OnPropertyChanged(nameof(Instructions));
                 }
             }
         }

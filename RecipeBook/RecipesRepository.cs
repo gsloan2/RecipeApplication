@@ -4,6 +4,7 @@ using Dapper;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Collections.ObjectModel;
 
 namespace RecipesApp.DataAccess
 {
@@ -17,6 +18,35 @@ namespace RecipesApp.DataAccess
         }
 
         public IDbConnection Connection => new SQLiteConnection(_connectionString);
+
+        public ObservableCollection<Category> Load()
+        {
+            var categories = GetAllCategories();
+            var recipes = GetAllRecipes();
+
+            // Log categories and recipes count for debugging
+            Console.WriteLine($"Loaded {categories.Count} categories and {recipes.Count} recipes");
+
+            var categoriesCollection = new ObservableCollection<Category>(categories);
+
+            foreach (var recipe in recipes)
+            {
+                var category = categoriesCollection.FirstOrDefault(c => c.Id == recipe.CategoryId);
+
+                if (category != null)
+                {
+                    category.Recipes.Add(recipe);
+                }
+                else
+                {
+                    // Log an error if the category is not found
+                    Console.WriteLine($"Category not found for recipe ID {recipe.Id} with CategoryID {recipe.CategoryId}");
+                }
+            }
+
+            return categoriesCollection;
+        }
+
 
         public void InsertCategory(Category category)
         {
@@ -43,7 +73,7 @@ namespace RecipesApp.DataAccess
                     recipe.CategoryId,
                     recipe.Title,
                     recipe.Ingredients,
-                    recipe.Steps
+                    recipe.Instructions
                 }).Single();
             }
         }
@@ -53,19 +83,22 @@ namespace RecipesApp.DataAccess
             using (var db = Connection)
             {
                 db.Open();
-                var sql = @"
-                    SELECT r.RecipeID as Id, r.Title, r.CategoryID, r.Ingredients, r.Instructions,
-                           c.CategoryID, c.Name
-                    FROM Recipes r
-                    INNER JOIN Categories c ON r.CategoryID = c.CategoryID";
+                var sql = "SELECT RecipeID as Id, CategoryID, Title, Ingredients, Instructions FROM Recipes";
+                return db.Query<Recipe>(sql).ToList();
 
-                var recipes = db.Query<Recipe, Category, Recipe>(sql, (recipe, category) =>
-                {
-                    recipe.CategoryId = category.Id;
-                    return recipe;
-                }, splitOn: "CategoryID").ToList();
+            }
+        }
 
-                return recipes;
+
+
+
+        private List<Category> GetAllCategories()
+        {
+            using (var db = Connection)
+            {
+                db.Open();
+                var sql = "SELECT CategoryID as Id, Name FROM Categories";
+                return db.Query<Category>(sql).ToList();
             }
         }
 
@@ -95,7 +128,7 @@ namespace RecipesApp.DataAccess
                 {
                     Title = recipe.Title,
                     Ingredients = recipe.Ingredients,
-                    Instructions = recipe.Steps,
+                    Instructions = recipe.Instructions,
                     CategoryId = recipe.CategoryId,
                     Id = recipe.Id
                 });
@@ -122,25 +155,16 @@ namespace RecipesApp.DataAccess
                 {
                     try
                     {
-                        // Get the CategoryID for the "Unassigned" category
-                        var unassignedCategory = db.QuerySingleOrDefault<Category>(
-                            "SELECT CategoryID FROM Categories WHERE Name = 'Unassigned'",
-                            transaction: transaction
-                        );
 
-                        // If there's no "Unassigned" category, throw an exception or handle accordingly
-                        if (unassignedCategory == null)
-                        {
-                            throw new InvalidOperationException("The 'Unassigned' category does not exist.");
-                        }
+                        int unassignedCategoryId = 1;
 
                         // Reassign recipes to the "Unassigned" category
                         var reassignSql = @"
-                            UPDATE Recipes
-                            SET CategoryID = @UnassignedCategoryId
-                            WHERE CategoryID = @CategoryId";
+                    UPDATE Recipes
+                    SET CategoryID = @UnassignedCategoryId
+                    WHERE CategoryID = @CategoryId";
                         db.Execute(reassignSql,
-                            new { UnassignedCategoryId = unassignedCategory.Id, CategoryId = categoryId },
+                            new { UnassignedCategoryId = unassignedCategoryId, CategoryId = categoryId },
                             transaction: transaction
                         );
 
@@ -160,6 +184,7 @@ namespace RecipesApp.DataAccess
                 }
             }
         }
+
 
     }
 }

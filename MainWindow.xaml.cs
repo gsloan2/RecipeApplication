@@ -27,10 +27,12 @@ namespace RecipesApp
             InitializeComponent();
             string databasePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecipeDatabase.db");
             string connectionString = $"Data Source={databasePath};Version=3;";
+            
 
             DataAccess = new RecipesRepository(connectionString);
 
-            Categories = new ObservableCollection<Category>();
+            Console.WriteLine("loading data");
+            Categories = DataAccess.Load();
 
             CategoryList.ItemsSource = Categories;
             RecipeList.ItemsSource = Categories[0].Recipes; // Display first category's recipes by default
@@ -62,7 +64,7 @@ namespace RecipesApp
                     selectedRecipe.Title = updatedRecipe.Title;
                     selectedRecipe.CategoryId = updatedRecipe.CategoryId;
                     selectedRecipe.Ingredients = updatedRecipe.Ingredients;
-                    selectedRecipe.Steps = updatedRecipe.Steps;
+                    selectedRecipe.Instructions = updatedRecipe.Instructions;
 
                     DataAccess.UpdateRecipe(selectedRecipe);
                 }
@@ -99,8 +101,9 @@ namespace RecipesApp
             {
                 string categoryName = dialog.CategoryName;
 
-                // Add the new category to your collection
-                Categories.Add(new Category { Name = categoryName });
+                Category category = new Category { Name = categoryName };
+                Categories.Add(category);
+                DataAccess.InsertCategory(category);
             }
         }
 
@@ -135,6 +138,11 @@ namespace RecipesApp
             {
                 if (MessageBox.Show("Are you sure you want to delete this category?", "Confirm Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
+                    ObservableCollection<Recipe> recipes = SelectedCategory.Recipes;
+                    foreach(Recipe recipe in recipes)
+                    {
+                        Categories[0].Recipes.Add(recipe);
+                    }
                     DataAccess.DeleteCategory(SelectedCategory.Id);
                     Categories.Remove(SelectedCategory);
                     RecipeList.ItemsSource = null; 
@@ -184,7 +192,7 @@ namespace RecipesApp
                     Title = recipeTitle,
                     CategoryId = category.Id, // Use CategoryId instead of Category name
                     Ingredients = ingredients,
-                    Steps = instructions
+                        Instructions = instructions
                 };
 
                 // Add recipe to the category's Recipes collection
@@ -210,7 +218,7 @@ namespace RecipesApp
                     selectedRecipe.Title = updatedRecipe.Title;
                     selectedRecipe.CategoryId = updatedRecipe.CategoryId;
                     selectedRecipe.Ingredients = updatedRecipe.Ingredients;
-                    selectedRecipe.Steps = updatedRecipe.Steps;
+                    selectedRecipe.Instructions = updatedRecipe.Instructions;
 
                     DataAccess.UpdateRecipe(selectedRecipe);
                 }

@@ -48,7 +48,7 @@ namespace RecipesApp.Dialogue
                 .Select(ingredient => new ListItem { Text = ingredient });
 
             // Assuming Steps is a string where each step is separated by Environment.NewLine
-            InstructionsTextBox.Text = recipe.Steps;
+            InstructionsTextBox.Text = recipe.Instructions;
         }
 
 
@@ -78,14 +78,14 @@ namespace RecipesApp.Dialogue
             _originalRecipe.Title = recipeName;
             _originalRecipe.CategoryId = newCategory?.Id ?? 0; // Assuming there is no Category with Id 0
             _originalRecipe.Ingredients = ingredients;
-            _originalRecipe.Steps = instructions;
+            _originalRecipe.Instructions = instructions;
 
             EditedRecipe = new Recipe
             {
                 Title = recipeName,
                 CategoryId = newCategory?.Id ?? 0,
                 Ingredients = ingredients,
-                Steps = instructions
+                Instructions = instructions
             };
 
             // If the new category is different, add the recipe to the new category's Recipes collection
