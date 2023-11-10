@@ -6,8 +6,23 @@ namespace RecipesApp
 {
     public class Category : INotifyPropertyChanged
     {
+        private int _id;
         private string _name;
         private ObservableCollection<Recipe> _recipes;
+
+
+        public int Id
+        {
+            get { return _id; }
+            set
+            {
+                if (_id != value)
+                {
+                    _id = value;
+                    OnPropertyChanged(nameof(Id));
+                }
+            }
+        }
 
         public string Name
         {

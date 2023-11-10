@@ -7,11 +7,16 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Data.SQLite;
+using RecipesApp.DataAccess;
 
 namespace RecipesApp
 {
     public partial class MainWindow : Window
     {
+
+        private RecipesRepository DataAccess { get; set; }
+
         public ObservableCollection<Category> Categories { get; set; }
 
         public Category SelectedCategory { get; set; }  
@@ -20,50 +25,12 @@ namespace RecipesApp
         public MainWindow()
         {
             InitializeComponent();
+            string databasePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecipeDatabase.db");
+            string connectionString = $"Data Source={databasePath};Version=3;";
 
-            Categories = new ObservableCollection<Category>
-            {
-                new Category { Name = "Desserts", Recipes = new ObservableCollection<Recipe>
-                    {
-                        new Recipe
-                        {
-                            Title = "Chocolate Cake",
-                            Category = "Desserts",
-                            Ingredients = new List<string>
-                            {
-                                "1-3/4 cups all-purpose flour",
-                                "2 cups sugar",
-                                "3/4 cup cocoa powder",
-                                "1-1/2 teaspoons baking powder",
-                                "1-1/2 teaspoons baking soda",
-                                "1 teaspoon salt",
-                                "2 eggs",
-                                "1 cup whole milk",
-                                "1/2 cup vegetable oil",
-                                "2 teaspoons vanilla extract",
-                                "1 cup boiling water"
-                            },
-                            Steps = new List<string>
-                            {
-                                "Preheat oven to 350 degrees F (175 degrees C).",
-                                "Grease and flour two nine-inch round pans.",
-                                "In a large bowl, stir together the sugar, flour, cocoa, baking powder, baking soda, and salt.",
-                                "Add the eggs, milk, oil, and vanilla, and mix for 2 minutes on medium speed of mixer.",
-                                "Stir in the boiling water last. Batter will be thin. Pour evenly into the prepared pans.",
-                                "Bake 30 to 35 minutes in the preheated oven, until the cake tests done with a toothpick.",
-                                "Cool in the pans for 10 minutes, then remove to a wire rack to cool completely."
-                            }
-                        }
+            DataAccess = new RecipesRepository(connectionString);
 
-                    }
-                },
-                new Category { Name = "Uncategorized", Recipes = new ObservableCollection<Recipe>
-                    {
-
-                    }
-                },
-                // Add more categories
-            };
+            Categories = new ObservableCollection<Category>();
 
             CategoryList.ItemsSource = Categories;
             RecipeList.ItemsSource = Categories[0].Recipes; // Display first category's recipes by default
@@ -93,15 +60,15 @@ namespace RecipesApp
                     // If saved, update the recipe details
                     var updatedRecipe = detailWindow.EditedRecipe;
                     selectedRecipe.Title = updatedRecipe.Title;
-                    selectedRecipe.Category = updatedRecipe.Category;
+                    selectedRecipe.CategoryId = updatedRecipe.CategoryId;
                     selectedRecipe.Ingredients = updatedRecipe.Ingredients;
                     selectedRecipe.Steps = updatedRecipe.Steps;
 
-                    
+                    DataAccess.UpdateRecipe(selectedRecipe);
                 }
             }
         }
-        
+
         private void CategoryList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (SelectedCategory.Name.Equals("Uncategorized"))
@@ -109,15 +76,19 @@ namespace RecipesApp
                 MessageBox.Show("You cannot alter this category", "Alert", MessageBoxButton.OK);
                 return;
             }
+
             EditCategoryDialogue dialog = new EditCategoryDialogue(SelectedCategory.Name);
             if (dialog.ShowDialog() == true)
             {
+                // Update the category name
                 SelectedCategory.Name = dialog.CategoryNameTextBox.Text;
-                foreach (Recipe recipe in SelectedCategory.Recipes) {
-                    recipe.Category = SelectedCategory.Name;
-                }
+
+                //Update category name in database
+                DataAccess.UpdateCategory(SelectedCategory);
+
             }
         }
+
 
 
         private void AddCategoryButton_Click(object sender, RoutedEventArgs e)
@@ -140,14 +111,16 @@ namespace RecipesApp
                 MessageBox.Show("You cannot alter this category", "Alert", MessageBoxButton.OK);
                 return;
             }
+
             EditCategoryDialogue dialog = new EditCategoryDialogue(SelectedCategory.Name);
-            if(dialog.ShowDialog() == true)
+            if (dialog.ShowDialog() == true)
             {
+                // Update the category name
                 SelectedCategory.Name = dialog.CategoryNameTextBox.Text;
-                foreach (Recipe recipe in SelectedCategory.Recipes)
-                {
-                    recipe.Category = SelectedCategory.Name;
-                }
+
+                //Update category name in database
+                DataAccess.UpdateCategory(SelectedCategory);
+
             }
         }
 
@@ -162,6 +135,7 @@ namespace RecipesApp
             {
                 if (MessageBox.Show("Are you sure you want to delete this category?", "Confirm Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
+                    DataAccess.DeleteCategory(SelectedCategory.Id);
                     Categories.Remove(SelectedCategory);
                     RecipeList.ItemsSource = null; 
                 }
@@ -170,6 +144,7 @@ namespace RecipesApp
             {
                 MessageBox.Show("Please select a category to delete");
             }
+            
         }
 
 
@@ -177,37 +152,50 @@ namespace RecipesApp
         {
             AddRecipeDialogue dialog = new AddRecipeDialogue(Categories);
 
-            if(dialog.ShowDialog() == true)
+            if (dialog.ShowDialog() == true)
             {
-                string RecipeName = dialog.RecipeNameTextBox.Text;
+                string recipeTitle = dialog.RecipeNameTextBox.Text;
                 string categoryName = dialog.CategoryComboBox.Text;
-                List<string> ingredients = dialog.ListItems
-                                         .Where(item => !string.IsNullOrWhiteSpace(item.Text))
-                                         .Select(item => item.Text)
-                                         .ToList();
-                List<string> instructions = dialog.InstructionsTextBox.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+                string ingredients = string.Join(Environment.NewLine, dialog.ListItems
+                                                        .Where(item => !string.IsNullOrWhiteSpace(item.Text))
+                                                        .Select(item => item.Text));
+                string instructions = string.Join(Environment.NewLine, dialog.InstructionsTextBox.Text
+                                                        .Split(new[] { Environment.NewLine }, StringSplitOptions.None));
 
+                // Find the Category object based on the selected category name
+                Category category = Categories.FirstOrDefault(c => c.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
+
+                // If the category is not found, default to the "Uncategorized" category
+                if (category == null)
+                {
+                    category = Categories.FirstOrDefault(c => c.Name.Equals("Uncategorized", StringComparison.OrdinalIgnoreCase));
+                }
+
+                // If "Uncategorized" category also not found, handle the error accordingly
+                if (category == null)
+                {
+                    // Handle error: Neither the selected category nor the "Uncategorized" category exists
+                    throw new InvalidOperationException("The selected category does not exist and no 'Uncategorized' category is available.");
+                }
+
+                // Create a new Recipe object with the CategoryID from the found category
                 Recipe recipe = new Recipe
                 {
-                    Title = RecipeName,
-                    Category = categoryName,
+                    Title = recipeTitle,
+                    CategoryId = category.Id, // Use CategoryId instead of Category name
                     Ingredients = ingredients,
                     Steps = instructions
                 };
 
-                Category category = Categories.FirstOrDefault(c => c.Name.Equals(categoryName, System.StringComparison.OrdinalIgnoreCase));
+                // Add recipe to the category's Recipes collection
+                category.Recipes.Add(recipe);
 
-                //add recipe to the category if category exists
-                if(category != null)
-                {
-                    category.Recipes.Add(recipe);
-                } else
-                {
-                    Category uncategorized = Categories.FirstOrDefault(c => c.Name.Equals("Uncategorized", System.StringComparison.OrdinalIgnoreCase));
-                    uncategorized.Recipes.Add(recipe);
-                }
+                // Insert new recipe into database
+                DataAccess.InsertRecipe(recipe);
+
             }
         }
+
 
         private void EditRecipeButton_Click(object sender, RoutedEventArgs e)
         {
@@ -220,11 +208,11 @@ namespace RecipesApp
                     // If saved, update the recipe details
                     var updatedRecipe = detailWindow.EditedRecipe;
                     selectedRecipe.Title = updatedRecipe.Title;
-                    selectedRecipe.Category = updatedRecipe.Category;
+                    selectedRecipe.CategoryId = updatedRecipe.CategoryId;
                     selectedRecipe.Ingredients = updatedRecipe.Ingredients;
                     selectedRecipe.Steps = updatedRecipe.Steps;
 
-
+                    DataAccess.UpdateRecipe(selectedRecipe);
                 }
             }
         }
@@ -236,6 +224,7 @@ namespace RecipesApp
             {
                 if (MessageBox.Show("Are you sure you want to delete this recipe?", "Confirm Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
+                    DataAccess.DeleteRecipe(SelectedRecipe.Id);
                     SelectedCategory.Recipes.Remove(SelectedRecipe);
                 }
             }

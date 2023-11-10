@@ -21,60 +21,84 @@ namespace RecipesApp.Dialogue
             InitializeComponent();
             _originalRecipe = recipe;
             Categories = categories;
+
+            // Assuming Ingredients is a string where ingredients are separated by newlines.
+            var ingredientLines = recipe.Ingredients.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
             ListItems = new ObservableCollection<ListItem>(
-                recipe.Ingredients.Select(ingredient => new ListItem { Text = ingredient })
+                ingredientLines.Select(ingredient => new ListItem { Text = ingredient })
             );
             DisplayRecipeDetails(recipe);
 
             ListItems.Add(new ListItem());
         }
 
+
         private void DisplayRecipeDetails(Recipe recipe)
         {
             RecipeNameTextBox.Text = recipe.Title;
 
-            // Set the selected item by finding the category in the collection
+
             CategoryComboBox.ItemsSource = Categories;
-            CategoryComboBox.SelectedItem = Categories.FirstOrDefault(c => c.Name == recipe.Category);
+            CategoryComboBox.SelectedItem = Categories.FirstOrDefault(c => c.Id == recipe.CategoryId);
 
-            // Set up the ingredients
-            IngredientsItemsControl.ItemsSource = ListItems;
+            // Assuming Ingredients is a string and each ingredient is separated by Environment.NewLine
+            IngredientsItemsControl.ItemsSource = recipe.Ingredients
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(ingredient => new ListItem { Text = ingredient });
 
-            // Fill the instructions textbox
-            InstructionsTextBox.Text = string.Join(Environment.NewLine, recipe.Steps);
+            // Assuming Steps is a string where each step is separated by Environment.NewLine
+            InstructionsTextBox.Text = recipe.Steps;
         }
+
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            // Assuming 'Categories' is an ObservableCollection<Category> that includes all categories
+            // and '_originalRecipe' is the recipe being edited
 
-            Category lastCategory = Categories.FirstOrDefault(c => c.Name.Equals(_originalRecipe.Category, System.StringComparison.OrdinalIgnoreCase));
-            lastCategory.Recipes.Remove(_originalRecipe);
-
-
+            // Find the category that the original recipe belongs to by CategoryId
+            Category lastCategory = Categories.FirstOrDefault(c => c.Id == _originalRecipe.CategoryId);
+            if (lastCategory != null)
+            {
+                // Remove the original recipe from the last category's Recipes collection
+                lastCategory.Recipes.Remove(_originalRecipe);
+            }
 
             // Gather the edited details
             string recipeName = RecipeNameTextBox.Text;
             Category newCategory = CategoryComboBox.SelectedItem as Category;
-            string categoryName = newCategory?.Name ?? string.Empty;
-            List<string> ingredients = ListItems.Select(item => item.Text).ToList();
-            List<string> instructions = InstructionsTextBox.Text
-                .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
-                .ToList();
 
-            // Create a new Recipe object with the edited details (or update the original)
+            // Join the ingredients and instructions into strings separated by newline
+            string ingredients = string.Join(Environment.NewLine, ListItems.Select(item => item.Text));
+            string instructions = string.Join(Environment.NewLine, InstructionsTextBox.Text
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+
+            // Update the original Recipe object with the edited details
+            _originalRecipe.Title = recipeName;
+            _originalRecipe.CategoryId = newCategory?.Id ?? 0; // Assuming there is no Category with Id 0
+            _originalRecipe.Ingredients = ingredients;
+            _originalRecipe.Steps = instructions;
+
             EditedRecipe = new Recipe
             {
                 Title = recipeName,
-                Category = categoryName,
+                CategoryId = newCategory?.Id ?? 0,
                 Ingredients = ingredients,
                 Steps = instructions
             };
 
-            newCategory.Recipes.Add(EditedRecipe);
+            // If the new category is different, add the recipe to the new category's Recipes collection
+            if (newCategory != null && newCategory != lastCategory)
+            {
+                newCategory.Recipes.Add(_originalRecipe);
+            }
+
 
             // Set the dialog result to true to indicate success
             this.DialogResult = true;
         }
+
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {

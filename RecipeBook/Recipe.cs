@@ -1,62 +1,77 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Security.Cryptography;
 
 namespace RecipesApp
 {
     public class Recipe : INotifyPropertyChanged
     {
-        private string title;
-        private string category;
-        private List<string> ingredients;
-        private List<string> steps;
+        private int _id;
+        private string _title;
+        private int _categoryId; // This is the foreign key reference to the Category table
+        private string _ingredients;
+        private string _steps;
+
+        public int Id
+        {
+            get { return _id; }
+            set
+            {
+                if (_id != value)
+                {
+                    _id = value;
+                    OnPropertyChanged(nameof(Id));
+                }
+            }
+        }
 
         public string Title
         {
-            get { return title; }
+            get { return _title; }
             set
             {
-                if (title != value)
+                if (_title != value)
                 {
-                    title = value;
+                    _title = value;
                     OnPropertyChanged(nameof(Title));
                 }
             }
         }
 
-        public string Category
+        public int CategoryId
         {
-            get { return category; }
+            get { return _categoryId; }
             set
             {
-                if (category != value)
+                if (_categoryId != value)
                 {
-                    category = value;
-                    OnPropertyChanged(nameof(Category));
+                    _categoryId = value;
+                    OnPropertyChanged(nameof(CategoryId));
                 }
             }
         }
 
-        public List<string> Ingredients
+        public string Ingredients
         {
-            get { return ingredients; }
+            get { return _ingredients; }
             set
             {
-                if (ingredients != value)
+                if (_ingredients != value)
                 {
-                    ingredients = value;
+                    _ingredients = value;
                     OnPropertyChanged(nameof(Ingredients));
                 }
             }
         }
 
-        public List<string> Steps
+        public string Steps
         {
-            get { return steps; }
+            get { return _steps; }
             set
             {
-                if (steps != value)
+                if (_steps != value)
                 {
-                    steps = value;
+                    _steps = value;
                     OnPropertyChanged(nameof(Steps));
                 }
             }
