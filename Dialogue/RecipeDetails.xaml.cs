@@ -22,15 +22,12 @@ namespace RecipesApp.Dialogue
             _originalRecipe = recipe;
             Categories = categories;
 
-            // Assuming Ingredients is a string where ingredients are separated by newlines.
-            var ingredientLines = recipe.Ingredients.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
-            ListItems = new ObservableCollection<ListItem>(
-                ingredientLines.Select(ingredient => new ListItem { Text = ingredient })
-            );
+            ListItems = new ObservableCollection<ListItem>();
+            ListItems.Add(new ListItem());
+            DataContext = this;
             DisplayRecipeDetails(recipe);
 
-            ListItems.Add(new ListItem());
         }
 
 
@@ -38,16 +35,19 @@ namespace RecipesApp.Dialogue
         {
             RecipeNameTextBox.Text = recipe.Title;
 
-
             CategoryComboBox.ItemsSource = Categories;
             CategoryComboBox.SelectedItem = Categories.FirstOrDefault(c => c.Id == recipe.CategoryId);
 
-            // Assuming Ingredients is a string and each ingredient is separated by Environment.NewLine
-            IngredientsItemsControl.ItemsSource = recipe.Ingredients
-                .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(ingredient => new ListItem { Text = ingredient });
+            // Clear existing items and add new ones based on the recipe's ingredients
+            ListItems.Clear();
+            foreach (var ingredient in recipe.Ingredients.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                ListItems.Add(new ListItem { Text = ingredient });
+            }
 
-            // Assuming Steps is a string where each step is separated by Environment.NewLine
+            // Add an additional empty item for new input
+            ListItems.Add(new ListItem());
+
             InstructionsTextBox.Text = recipe.Instructions;
         }
 
@@ -89,10 +89,9 @@ namespace RecipesApp.Dialogue
             };
 
             // If the new category is different, add the recipe to the new category's Recipes collection
-            if (newCategory != null && newCategory != lastCategory)
-            {
-                newCategory.Recipes.Add(_originalRecipe);
-            }
+
+            newCategory.Recipes.Add(_originalRecipe);
+            
 
 
             // Set the dialog result to true to indicate success

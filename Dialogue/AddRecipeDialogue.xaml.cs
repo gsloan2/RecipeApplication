@@ -30,7 +30,7 @@ namespace RecipesApp.Dialogue
         {
             InitializeComponent();
             ListItems = new ObservableCollection<ListItem>();
-            ListItems.Add(new ListItem()); // Start with one empty item
+            ListItems.Add(new ListItem()); 
             DataContext = this;
             CategoryComboBox.ItemsSource = categories;
         }
@@ -102,6 +102,8 @@ namespace RecipesApp.Dialogue
                 ListItems.Add(new ListItem());
             }
         }
+
+
 
     }
 }

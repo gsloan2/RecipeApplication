@@ -5,34 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RecipesApp.Dialogue"
         mc:Ignorable="d"
-        Title="Edit Category" Height="150" Width="800">
+        Title="Add Category" Height="150" Width="800">
+    <Window.Resources>
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BorderBrush" Value="#FFABADB3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Foreground" Value="LightGray"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="FontStyle" Value="Normal"/>
+                    <Setter Property="BorderBrush" Value="#FF6DA34D"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Background" Value="#FF6DA34D"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF8DBE75"/>
+                    <Setter Property="BorderBrush" Value="#FF8DBE75"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <StackPanel Margin="10">
-        <TextBox x:Name="CategoryNameTextBox" Margin="10">
-            <TextBox.Style>
-                <Style TargetType="{x:Type TextBox}">
-                    <Setter Property="Foreground" Value="Gray"/>
-                    <Style.Triggers>
-                        <Trigger Property="Text" Value="">
-                            <Setter Property="Foreground" Value="LightGray"/>
-                            <Setter Property="FontStyle" Value="Italic"/>
-                        </Trigger>
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="FontStyle" Value="Normal"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
+        <TextBox x:Name="CategoryNameTextBox" Style="{StaticResource TextBoxStyle}">
             <TextBox.ToolTip>
-                <ToolTip Content="Enter new category name here"/>
+                <ToolTip Content="Enter category name here"/>
             </TextBox.ToolTip>
         </TextBox>
+
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Save" Width="50" Margin="5,0" Click="SaveButton_Click"/>
-            <Button Content="Cancel" Width="50" Margin="5,0" Click="CancelButton_Click"/>
+            <Button Content="Save" Click="SaveButton_Click" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Cancel" Click="CancelButton_Click" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
-
-
     </StackPanel>
-    
 </Window>
