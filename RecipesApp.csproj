@@ -48,6 +48,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.54.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.54\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Data.Sqlite, Version=7.0.13.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Sqlite.Core.7.0.13\lib\netstandard2.0\Microsoft.Data.Sqlite.dll</HintPath>
     </Reference>
@@ -106,12 +109,16 @@
     <Compile Include="Dialogue\EditCategoryDialogue.xaml.cs">
       <DependentUpon>EditCategoryDialogue.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogue\ImportRecipeDialogue.xaml.cs">
+      <DependentUpon>ImportRecipeDialogue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogue\RecipeDetails.xaml.cs">
       <DependentUpon>RecipeDetails.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecipeBook\Category.cs" />
     <Compile Include="RecipeBook\ListItem.cs" />
     <Compile Include="RecipeBook\Recipe.cs" />
+    <Compile Include="RecipeBook\RecipeScraper.cs" />
     <Compile Include="RecipeBook\RecipesRepository.cs" />
     <Page Include="Dialogue\AddCategoryDialogue.xaml">
       <SubType>Designer</SubType>
@@ -122,6 +129,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogue\EditCategoryDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogue\ImportRecipeDialogue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -174,6 +185,10 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\home.png" />
+    <Resource Include="resources\search.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

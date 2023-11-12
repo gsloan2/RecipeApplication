@@ -23,8 +23,7 @@ namespace RecipesApp.Dialogue
             Categories = categories;
 
 
-            ListItems = new ObservableCollection<ListItem>();
-            ListItems.Add(new ListItem());
+            ListItems = new ObservableCollection<ListItem> { new ListItem() };
             DataContext = this;
             DisplayRecipeDetails(recipe);
 
@@ -54,8 +53,7 @@ namespace RecipesApp.Dialogue
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Assuming 'Categories' is an ObservableCollection<Category> that includes all categories
-            // and '_originalRecipe' is the recipe being edited
+            
 
             // Find the category that the original recipe belongs to by CategoryId
             Category lastCategory = Categories.FirstOrDefault(c => c.Id == _originalRecipe.CategoryId);

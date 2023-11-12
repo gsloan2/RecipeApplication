@@ -40,7 +40,7 @@
     </Window.Resources>
     <StackPanel Margin="10">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,10">
-            <TextBox x:Name="RecipeNameTextBox" Text="Recipe Name" FontWeight="Bold" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Center" Style="{StaticResource TextBoxStyle}"/>
+            <TextBox x:Name="RecipeNameTextBox" Width="150" Text="Recipe Name" FontWeight="Bold" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Center" Style="{StaticResource TextBoxStyle}" GotFocus="RecipeNameTextBox_GotFocus" LostFocus="RecipeNameTextBox_LostFocus"/>
             <ComboBox x:Name="CategoryComboBox" Width="200" VerticalAlignment="Center" DisplayMemberPath="Name" SelectedValuePath="Name" Style="{StaticResource ComboBoxStyle}">
                 <!-- ComboBox items will be added here -->
             </ComboBox>
@@ -58,7 +58,7 @@
         <TextBox x:Name="InstructionsTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="200" VerticalScrollBarVisibility="Auto" Style="{StaticResource TextBoxStyle}"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Save" Click="SaveButton_Click" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Save" Click="SaveButton_Click" Style="{StaticResource ButtonStyle}" IsDefault="True"/>
             <Button Content="Cancel" Click="CancelButton_Click" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
     </StackPanel>

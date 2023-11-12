@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace RecipesApp
 {
@@ -11,6 +12,15 @@ namespace RecipesApp
         private int _categoryId; // This is the foreign key reference to the Category table
         private string _ingredients;
         private string _instructions;
+
+
+        public Recipe()
+        {
+            this.Ingredients = "";
+
+            this.Instructions = "";
+            this.Title = "";
+        }
 
         public int Id
         {
@@ -82,6 +92,18 @@ namespace RecipesApp
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Id: {_id}");
+            sb.AppendLine($"Title: {_title}");
+            sb.AppendLine($"Category ID: {_categoryId}");
+            sb.AppendLine($"Ingredients: {_ingredients}");
+            sb.AppendLine($"Instructions: {_instructions}");
+
+            return sb.ToString();
         }
     }
 }

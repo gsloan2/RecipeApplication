@@ -25,38 +25,53 @@
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="FontSize" Value="16"/>
-            <!-- Font size for Category ListBox -->
         </Style>
         <Style x:Key="RecipeListBoxStyle" TargetType="ListBox">
             <Setter Property="Background" Value="#FFF0F0F0"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="FontSize" Value="14"/>
-            <!-- Font size for Recipe ListBox -->
+        </Style>
+        <Style x:Key="IconButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
         </Style>
     </Window.Resources>
     <DockPanel>
-        <!-- ToolBar -->
         <ToolBar DockPanel.Dock="Top">
             <Button x:Name="AddCategoryButton" Content="Add Category" Click="AddCategoryButton_Click" Style="{StaticResource ButtonStyle}"/>
             <Button x:Name="EditCategoryButton" Content="Edit Category" Click="EditCategoryButton_Click" Style="{StaticResource ButtonStyle}"/>
             <Button x:Name="DeleteCategoryButton" Content="Delete Category" Click="DeleteCategoryButton_Click" Style="{StaticResource ButtonStyle}"/>
             <Separator />
             <Button x:Name="AddRecipeButton" Content="Add Recipe" Click="AddRecipeButton_Click" Style="{StaticResource ButtonStyle}"/>
+            <Button x:Name="ImportRecipeButton" Content="Import Recipe" Click="ImportRecipeButton_Click" Style="{StaticResource ButtonStyle}"/>
             <Button x:Name="EditRecipeButton" Content="Edit Recipe" Click="EditRecipeButton_Click" Style="{StaticResource ButtonStyle}"/>
             <Button x:Name="DeleteRecipeButton" Content="Delete Recipe" Click="DeleteRecipeButton_Click" Style="{StaticResource ButtonStyle}"/>
         </ToolBar>
-
-        <!-- Content Grid -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <ListBox x:Name="CategoryList" Grid.Column="0" SelectionMode="Single" MouseDoubleClick="CategoryList_MouseDoubleClick" SelectionChanged="CategoryList_SelectionChanged" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Style="{StaticResource CategoryListBoxStyle}"/>
 
-            <ListBox x:Name="RecipeList" Grid.Column="1" MouseDoubleClick="RecipeList_MouseDoubleClick" SelectionChanged="RecipeList_SelectionChanged" DisplayMemberPath="Title" Style="{StaticResource RecipeListBoxStyle}"/>
+            <StackPanel Grid.Column="0" Orientation="Vertical">
+                <Button Style="{StaticResource IconButtonStyle}">
+                    <Image Source="resources/home.png"/>
+                </Button>
+                <Button Style="{StaticResource IconButtonStyle}">
+                    <Image Source="resources/search.png"/>
+                </Button>
+            </StackPanel>
+
+            <!-- Category List -->
+            <ListBox x:Name="CategoryList" Grid.Column="1" SelectionMode="Single" MouseDoubleClick="CategoryList_MouseDoubleClick" SelectionChanged="CategoryList_SelectionChanged" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Style="{StaticResource CategoryListBoxStyle}"/>
+
+            <!-- Recipe List -->
+            <ListBox x:Name="RecipeList" Grid.Column="2" MouseDoubleClick="RecipeList_MouseDoubleClick" SelectionChanged="RecipeList_SelectionChanged" DisplayMemberPath="Title" Style="{StaticResource RecipeListBoxStyle}"/>
         </Grid>
     </DockPanel>
 </Window>

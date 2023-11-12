@@ -17,9 +17,7 @@ using ListItem = RecipesApp.RecipeBook.ListItem;
 
 namespace RecipesApp.Dialogue
 {
-    /// <summary>
-    /// Interaction logic for AddRecipeDialogue.xaml
-    /// </summary>
+
     public partial class AddRecipeDialogue : Window
     {
 
@@ -35,9 +33,37 @@ namespace RecipesApp.Dialogue
             CategoryComboBox.ItemsSource = categories;
         }
 
+        public AddRecipeDialogue(ObservableCollection<Category> categories, Recipe recipe)
+        {
+            InitializeComponent();
+            ListItems = new ObservableCollection<ListItem>();
+            DataContext = this;
+
+            RecipeNameTextBox.Text = recipe.Title;
+
+            CategoryComboBox.ItemsSource = categories;
+
+            ListItems.Clear();
+            if(recipe.Ingredients.Length > 0)
+            {
+                foreach (var ingredient in recipe.Ingredients.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    ListItems.Add(new ListItem { Text = ingredient });
+                }
+            }
+            
+
+            
+            ListItems.Add(new ListItem());
+
+            InstructionsTextBox.Text = recipe.Instructions;
+
+            CategoryComboBox.ItemsSource = categories;
+        }
+
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Basic validation
+            
             if (string.IsNullOrWhiteSpace(RecipeNameTextBox.Text) || string.Equals("Recipe Name", RecipeNameTextBox.Text))
             {
                 MessageBox.Show("Please enter a recipe name.");
@@ -68,14 +94,11 @@ namespace RecipesApp.Dialogue
             var textBox = (TextBox)sender;
             var listItem = (ListItem)textBox.DataContext;
 
-            // Check if the text is not null or whitespace, and if it's the last item in the collection
             if (!string.IsNullOrWhiteSpace(listItem.Text) && ListItems.IndexOf(listItem) == ListItems.Count - 1)
             {
-                // Add a new empty item to the list if this is the last item and it is not empty
                 ListItems.Add(new ListItem());
             }
 
-            // Remove any empty items except for the last one
             for (int i = ListItems.Count - 2; i >= 0; i--)
             {
                 if (string.IsNullOrWhiteSpace(ListItems[i].Text))
@@ -90,19 +113,34 @@ namespace RecipesApp.Dialogue
             var textBox = (TextBox)sender;
             var listItem = (ListItem)textBox.DataContext;
 
-            // If the user deletes all text, don't add a new ListItem
+
             if (string.IsNullOrEmpty(textBox.Text) && ListItems.Count > 1)
             {
-                // Remove the current ListItem if it's not the only one and it's empty
+
                 ListItems.Remove(listItem);
             }
             else if (!string.IsNullOrEmpty(textBox.Text) && ListItems.Last() == listItem)
             {
-                // Add a new empty item if this is the last item and it's not empty
+
                 ListItems.Add(new ListItem());
             }
         }
 
+        private void RecipeNameTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (RecipeNameTextBox.Text == "Recipe Name")
+            {
+                RecipeNameTextBox.Text = "";
+            }
+        }
+
+        private void RecipeNameTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(RecipeNameTextBox.Text))
+            {
+                RecipeNameTextBox.Text = "Recipe Name";
+            }
+        }
 
 
     }

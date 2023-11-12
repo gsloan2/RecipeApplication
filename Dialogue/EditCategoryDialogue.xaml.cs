@@ -12,11 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace RecipesApp.Dialogue
-{
-    /// <summary>
-    /// Interaction logic for EditCategoryDialogue.xaml
-    /// </summary>
+namespace RecipesApp.Dialogue { 
+
     public partial class EditCategoryDialogue : Window
     {
 
@@ -30,7 +27,6 @@ namespace RecipesApp.Dialogue
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             
-            // Basic validation
             if (string.IsNullOrWhiteSpace(CategoryNameTextBox.Text))
             {
                 MessageBox.Show("Please enter a category name.");

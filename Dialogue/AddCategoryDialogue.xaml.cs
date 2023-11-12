@@ -26,7 +26,7 @@ namespace RecipesApp.Dialogue
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Basic validation
+
             if (string.IsNullOrWhiteSpace(CategoryNameTextBox.Text))
             {
                 MessageBox.Show("Please enter a category name.");

@@ -48,3 +48,8 @@ C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\System.Numerics.Vect
 C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\sloan\source\repos\RecipesApp\RecipesApp\obj\Debug\RecipesApp.csproj.CopyComplete
 C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\RecipeDatabase.db
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\HtmlAgilityPack.dll
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\HtmlAgilityPack.xml
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\obj\Debug\Dialogue\ImportRecipeDialogue.g.cs
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\obj\Debug\Dialogue\ImportRecipeDialogue.baml

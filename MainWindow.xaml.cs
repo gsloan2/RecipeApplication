@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Data.SQLite;
 using RecipesApp.DataAccess;
+using RecipesApp.RecipeBook;
 
 namespace RecipesApp
 {
@@ -19,7 +20,7 @@ namespace RecipesApp
 
         public ObservableCollection<Category> Categories { get; set; }
 
-        public Category SelectedCategory { get; set; }  
+        public Category SelectedCategory { get; set; }
 
         public Recipe SelectedRecipe { get; set; }
         public MainWindow()
@@ -27,7 +28,7 @@ namespace RecipesApp
             InitializeComponent();
             string databasePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecipeDatabase.db");
             string connectionString = $"Data Source={databasePath};Version=3;";
-            
+
 
             DataAccess = new RecipesRepository(connectionString);
 
@@ -139,20 +140,20 @@ namespace RecipesApp
                 if (MessageBox.Show("Are you sure you want to delete this category?", "Confirm Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     ObservableCollection<Recipe> recipes = SelectedCategory.Recipes;
-                    foreach(Recipe recipe in recipes)
+                    foreach (Recipe recipe in recipes)
                     {
                         Categories[0].Recipes.Add(recipe);
                     }
                     DataAccess.DeleteCategory(SelectedCategory.Id);
                     Categories.Remove(SelectedCategory);
-                    RecipeList.ItemsSource = null; 
+                    RecipeList.ItemsSource = null;
                 }
             }
             else
             {
                 MessageBox.Show("Please select a category to delete");
             }
-            
+
         }
 
 
@@ -192,7 +193,7 @@ namespace RecipesApp
                     Title = recipeTitle,
                     CategoryId = category.Id, // Use CategoryId instead of Category name
                     Ingredients = ingredients,
-                        Instructions = instructions
+                    Instructions = instructions
                 };
 
                 // Add recipe to the category's Recipes collection
@@ -202,6 +203,66 @@ namespace RecipesApp
                 DataAccess.InsertRecipe(recipe);
 
             }
+        }
+
+        private async void ImportRecipeButton_Click(object sender, EventArgs e)
+        {
+            RecipeScraper scraper = new RecipeScraper();
+            ImportRecipeDialogue dialogue = new ImportRecipeDialogue();
+
+            if(dialogue.ShowDialog() == true)
+            {
+                string url = dialogue.UrlTextBox.Text;
+                Console.WriteLine("Got this url: " + url);
+                Recipe recipe = await scraper.ScrapeRecipeAsync(url);
+                Console.WriteLine(recipe.ToString());
+
+                AddRecipeDialogue dialogue2 = new AddRecipeDialogue(Categories, recipe);
+                if (dialogue2.ShowDialog() == true)
+                {
+                    string recipeTitle = dialogue2.RecipeNameTextBox.Text;
+                    string categoryName = dialogue2.CategoryComboBox.Text;
+                    string ingredients = string.Join(Environment.NewLine, dialogue2.ListItems
+                                                            .Where(item => !string.IsNullOrWhiteSpace(item.Text))
+                                                            .Select(item => item.Text));
+                    string instructions = string.Join(Environment.NewLine, dialogue2.InstructionsTextBox.Text
+                                                            .Split(new[] { Environment.NewLine }, StringSplitOptions.None));
+
+                    // Find the Category object based on the selected category name
+                    Category category = Categories.FirstOrDefault(c => c.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
+
+                    // If the category is not found, default to the "Uncategorized" category
+                    if (category == null)
+                    {
+                        category = Categories.FirstOrDefault(c => c.Name.Equals("Uncategorized", StringComparison.OrdinalIgnoreCase));
+                    }
+
+                    // If "Uncategorized" category also not found, handle the error accordingly
+                    if (category == null)
+                    {
+                        // Handle error: Neither the selected category nor the "Uncategorized" category exists
+                        throw new InvalidOperationException("The selected category does not exist and no 'Uncategorized' category is available.");
+                    }
+
+                    // Create a new Recipe object with the CategoryID from the found category
+                    Recipe recipeToAdd = new Recipe
+                    {
+                        Title = recipeTitle,
+                        CategoryId = category.Id, // Use CategoryId instead of Category name
+                        Ingredients = ingredients,
+                        Instructions = instructions
+                    };
+
+                    // Add recipe to the category's Recipes collection
+                    category.Recipes.Add(recipeToAdd);
+
+                    // Insert new recipe into database
+                    DataAccess.InsertRecipe(recipeToAdd);
+
+                }
+
+            }
+            
         }
 
 

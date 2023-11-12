@@ -48,7 +48,7 @@
         </TextBox>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Save" Click="SaveButton_Click" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Save" Click="SaveButton_Click" Style="{StaticResource ButtonStyle}" IsDefault="True"/>
             <Button Content="Cancel" Click="CancelButton_Click" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
     </StackPanel>
