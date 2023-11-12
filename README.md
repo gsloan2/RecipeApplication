@@ -8,9 +8,10 @@ The Recipe Application is a learning project designed to demonstrate proficiency
 - **Ingredient Management**: Each recipe allows for the listing of ingredients.
 - **Categorized Recipes**: Recipes can be categorized (e.g., Breakfast, Lunch, Dinner, Desserts, Vegetarian) for easy navigation and organization.
 - **Step-by-Step Instructions**: Users can add instructions for each recipe.
-- ##TODO - **Add Search Functionality**: A search feature to find recipes based on ingredients, categories, or recipe names.
+- **Importing Recipes**: Users can import recipes to their recipe book from major recipe sites.
 - **Database Integration**: Uses SQLite for efficient data storage and retrieval.
-- **User-Friendly Interface**: Designed with WPF for a responsive and intuitive user interface.
+- ##TODO - **Add Search Functionality**: A search feature to find recipes based on ingredients, categories, or recipe names.
+
 
 ## Installation
 1. Clone the repository: `git clone [repository-url]`
