@@ -228,35 +228,34 @@ namespace RecipesApp
                     string instructions = string.Join(Environment.NewLine, dialogue2.InstructionsTextBox.Text
                                                             .Split(new[] { Environment.NewLine }, StringSplitOptions.None));
 
-                    // Find the Category object based on the selected category name
+
                     Category category = Categories.FirstOrDefault(c => c.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
 
-                    // If the category is not found, default to the "Uncategorized" category
                     if (category == null)
                     {
                         category = Categories.FirstOrDefault(c => c.Name.Equals("Uncategorized", StringComparison.OrdinalIgnoreCase));
                     }
 
-                    // If "Uncategorized" category also not found, handle the error accordingly
+            
                     if (category == null)
                     {
-                        // Handle error: Neither the selected category nor the "Uncategorized" category exists
+                   
                         throw new InvalidOperationException("The selected category does not exist and no 'Uncategorized' category is available.");
                     }
 
-                    // Create a new Recipe object with the CategoryID from the found category
+                    
                     Recipe recipeToAdd = new Recipe
                     {
                         Title = recipeTitle,
-                        CategoryId = category.Id, // Use CategoryId instead of Category name
+                        CategoryId = category.Id, 
                         Ingredients = ingredients,
                         Instructions = instructions
                     };
 
-                    // Add recipe to the category's Recipes collection
+                    
                     category.Recipes.Add(recipeToAdd);
 
-                    // Insert new recipe into database
+                    
                     DataAccess.InsertRecipe(recipeToAdd);
 
                 }
@@ -283,6 +282,18 @@ namespace RecipesApp
 
                     DataAccess.UpdateRecipe(selectedRecipe);
                 }
+            }
+        }
+
+        private void ExportRecipeButton_Click(Object sender, RoutedEventArgs e)
+        {
+            if(SelectedRecipe == null)
+            {
+                MessageBox.Show("Select a recipe to export!");
+            }
+            else
+            {
+                CreateDocument.CreateRecipeDocument(SelectedRecipe);
             }
         }
 
