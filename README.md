@@ -11,6 +11,7 @@ The Recipe Application is a learning project designed to demonstrate proficiency
 - **Importing Recipes**: Users can import recipes to their recipe book from major recipe sites.
 - **Database Integration**: Uses SQLite for efficient data storage and retrieval.
 - ##TODO - **Add Search Functionality**: A search feature to find recipes based on ingredients, categories, or recipe names.
+- ##TODO - **Add Tests**: A testing suite to ensure the program works across a variety of inputs.
 
 
 ## Installation
