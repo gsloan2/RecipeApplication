@@ -55,3 +55,7 @@ C:\Users\sloan\source\repos\RecipesApp\RecipesApp\obj\Debug\Dialogue\ImportRecip
 C:\Users\sloan\source\repos\RecipesApp\RecipesApp\obj\Debug\Dialogue\ImportRecipeDialogue.baml
 C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\DocumentFormat.OpenXml.dll
 C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\DocumentFormat.OpenXml.xml
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\RecipesApp.exe.manifest
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Debug\RecipesApp.application
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\obj\Debug\RecipesApp.exe.manifest
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\obj\Debug\RecipesApp.application

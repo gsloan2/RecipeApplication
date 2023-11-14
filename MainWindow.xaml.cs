@@ -315,6 +315,78 @@ namespace RecipesApp
         }
 
 
+        private void HomePage_Click(object sender, RoutedEventArgs e)
+        {
+            RecipeList.Visibility = Visibility.Visible;
+            CategoryList.Visibility = Visibility.Visible;
+            HomePagePanel.Visibility = Visibility.Visible;
 
+            SearchPanel.Visibility = Visibility.Collapsed;
+            SearchResultsList.Visibility = Visibility.Collapsed;
+
+            CategoryList.ItemsSource = Categories;
+            RecipeList.ItemsSource = Categories[0].Recipes; // Display first category's recipes by default
+            SelectedCategory = Categories[0];
+        }
+
+        private void SearchPage_Click(Object sender, RoutedEventArgs e)
+        {
+            RecipeList.Visibility = Visibility.Collapsed;
+            CategoryList.Visibility = Visibility.Collapsed;
+            HomePagePanel.Visibility = Visibility.Collapsed;
+
+            SearchPanel.Visibility = Visibility.Visible;
+            SearchResultsList.Visibility = Visibility.Visible;
+        }
+
+        private void SearchButton_Click(Object sender, RoutedEventArgs e)
+        {
+            SearchResultsList.ItemsSource = RecipeSearch.searchRecipes(SearchTextBox.Text, Categories);
+            
+        }
+
+
+        private void Search_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (SearchTextBox.Text == "Enter ingredients to search(ex: potato, butter, pepper)")
+            {
+                SearchTextBox.Text = "";
+
+            }
+        }
+
+        private void Search_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SearchTextBox.Text))
+            {
+                SearchTextBox.Text = "Enter ingredients to search(ex: potato, butter, pepper)";
+            }
+        }
+
+
+        private void SearchResultList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            SelectedRecipe = SearchResultsList.SelectedItem as Recipe;
+        }
+
+        private void SearchResultList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (SearchResultsList.SelectedItem is Recipe selectedRecipe)
+            {
+                // Open the detail window, passing in the selected recipe and the available categories
+                RecipeDetails detailWindow = new RecipeDetails(selectedRecipe, Categories);
+                if (detailWindow.ShowDialog() == true)
+                {
+                    // If saved, update the recipe details
+                    var updatedRecipe = detailWindow.EditedRecipe;
+                    selectedRecipe.Title = updatedRecipe.Title;
+                    selectedRecipe.CategoryId = updatedRecipe.CategoryId;
+                    selectedRecipe.Ingredients = updatedRecipe.Ingredients;
+                    selectedRecipe.Instructions = updatedRecipe.Instructions;
+
+                    DataAccess.UpdateRecipe(selectedRecipe);
+                }
+            }
+        }
     }
 }

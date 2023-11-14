@@ -1,0 +1,11 @@
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\RecipesApp.pdb
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\RecipeDatabase.db
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\RecipesApp.dll.config
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\D3DCompiler_47_cor3.dll
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\PenImc_cor3.dll
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\PresentationNative_cor3.dll
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\vcruntime140_cor3.dll
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\wpfgfx_cor3.dll
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\sni.dll
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\SQLite.Interop.dll
+C:\Users\sloan\source\repos\RecipesApp\RecipesApp\bin\Release\net6.0-windows8.0\win-x64\app.publish\RecipesApp.exe
